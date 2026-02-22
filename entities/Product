@@ -1,0 +1,52 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nombre del producto"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripci\u00f3n detallada del producto"
+    },
+    "price": {
+      "type": "number",
+      "description": "Precio del producto"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "mates_torpedo",
+        "mates_imperiales",
+        "mates_madera",
+        "cuencos_tablas",
+        "bombillas",
+        "yerberas_azucareras"
+      ],
+      "description": "Categor\u00eda del producto"
+    },
+    "images": {
+      "type": "array",
+      "description": "URLs de im\u00e1genes del producto",
+      "items": {
+        "type": "string"
+      }
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Producto destacado"
+    },
+    "stock": {
+      "type": "number",
+      "default": 10,
+      "description": "Stock disponible"
+    }
+  },
+  "required": [
+    "name",
+    "price",
+    "category"
+  ]
+}
