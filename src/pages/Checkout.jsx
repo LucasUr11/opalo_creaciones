@@ -9,7 +9,7 @@ import { createPageUrl } from '@/utils';
 import { useCart } from '@/components/store/CartContext';
 import { categoryConfig } from '@/components/store/CategoryCard';
 
-const WHATSAPP_NUMBER = '+54 9 3537669534'; // Reemplazar con el número real
+const WHATSAPP_NUMBER = '+54 9 3537 333758'; // Reemplazar con el número real
 
 export default function Checkout() {
   const { items, updateQuantity, removeItem, totalPrice, clearCart } = useCart();
