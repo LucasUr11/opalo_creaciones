@@ -129,6 +129,48 @@ const products = [
     description: "Selección premium con interior curado."
   },
 
+  // Mates Camionero.-
+  {
+    id: "madera-camionero",
+    name: "Mate Camionero",
+    price: 25000,
+    category: "mates_camionero",
+    images: ["/images/mate_camionero-1.jpeg"],
+    description: "Selección premium con interior curado."
+  },
+  {
+    id: "camionero-quemado",
+    name: "Mate Camionero Quemado",
+    price: 25000,
+    category: "mates_camionero",
+    images: ["/images/mate_camionero-1.jpeg"],
+    description: "Selección premium con interior curado."
+  },
+  {
+    id: "camionero-premium",
+    name: "Mate Camionero Premium",
+    price: 25000,
+    category: "mates_camionero",
+    images: ["/images/mate_camionero-1.jpeg"],
+    description: "Selección premium con interior curado."
+  },
+  {
+    id: "camionero-algarrobo",
+    name: "Mate Camionero Algarrobo",
+    price: 25000,
+    category: "mates_camionero",
+    images: ["/images/mate_camionero-1.jpeg"],
+    description: "Selección premium con interior curado."
+  },
+  {
+    id: "camionero-roble",
+    name: "Mate Camionero Roble",
+    price: 25000,
+    category: "mates_camionero",
+    images: ["/images/mate_camionero-1.jpeg"],
+    description: "Selección premium con interior curado."
+  },
+
   // Bombillas.-
   {
     id: "bombilla-acero-clasica",

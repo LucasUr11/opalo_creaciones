@@ -4,15 +4,21 @@ import ProductCard from '@/components/store/ProductCard';
 import Footer from '@/components/store/Footer';
 import { Loader2 } from 'lucide-react';
 import { categoryConfig } from '@/components/store/CategoryCard';
-import { getProducts } from '@/data/products'
+import { supabase } from "../lib/supabase"
 
 const categoryKeys = [
   'mates_torpedo',
   'mates_imperiales',
   'mates_madera',
+  'mates_camionero',
+  'mates_criollo',
+  'mates_rancheros',
   'cuencos_tablas',
   'bombillas',
-  'yerberas_azucareras'
+  'yerberas_azucareras',
+  'cuadros',
+  'prendas',
+  'cajas',
 ];
 
 export default function Products() {
@@ -24,10 +30,22 @@ export default function Products() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    getProducts().then(data => {
-      setProducts(data)
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("name")
+
+      if (error) {
+        console.error("Error trayendo productos:", error)
+      } else {
+        setProducts(data)
+      }
+
       setIsLoading(false)
-    })
+    }
+
+    fetchProducts()
   }, [])
 
   const filteredProducts = useMemo(() => {
@@ -37,9 +55,12 @@ export default function Products() {
 
   return (
     <div className="min-h-screen pt-20">
+
       {/* Header */}
       <div className="bg-white border-b border-[#e6e0cf]">
+
         <div className="max-w-7xl mx-auto px-6 py-12">
+
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <p className="text-[#5297ac] text-sm tracking-[0.3em] uppercase mb-3">Catálogo</p>
             <h1 className="text-4xl md:text-5xl font-light text-[#3a3a3a]" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
@@ -48,12 +69,16 @@ export default function Products() {
                 : 'Todos los Productos'}
             </h1>
           </motion.div>
+
         </div>
+
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-12">
+
         {/* Filters */}
         <div className="flex flex-wrap gap-2 mb-12">
+
           <button
             onClick={() => setActiveCategory('all')}
             className={`px-5 py-2.5 rounded-full text-sm tracking-wide transition-all ${activeCategory === 'all'
@@ -63,6 +88,7 @@ export default function Products() {
           >
             Todos
           </button>
+
           {categoryKeys.map(key => (
             <button
               key={key}
@@ -75,6 +101,7 @@ export default function Products() {
               {categoryConfig[key]?.label || key}
             </button>
           ))}
+
         </div>
 
         {/* Products grid */}

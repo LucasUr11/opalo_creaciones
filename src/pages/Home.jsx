@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from "../lib/supabase"
 import { motion } from 'framer-motion';
 import HeroSection from '@/components/store/HeroSection';
 import CategoryCard from '@/components/store/CategoryCard';
 import ProductCard from '@/components/store/ProductCard';
 import Footer from '@/components/store/Footer';
-import { getProducts } from '@/data/products';
+
 
 const categories = [
   'mates_torpedo',
@@ -17,19 +18,36 @@ const categories = [
 
 export default function Home() {
 
-  const [products, setProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    getProducts().then(data => {
-      setProducts(data);
-      setIsLoading(false);
-    });
-  }, []);
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+
+      if (error) {
+        console.error("Error trayendo productos:", error)
+      } else {
+        setProducts(data)
+      }
+
+      setIsLoading(false)
+    }
+
+    fetchProducts()
+  }, [])
 
   const featuredProducts = products.filter(p => p.featured);
 
-  
+  const getCategoryImage = (categoryKey) => {
+    const product = products.find(
+      p => p.category === categoryKey && p.images?.length > 0
+    )
+    return product?.images?.[0] || "/placeholder.jpg"
+  }
+
   return (
     <div className="min-h-screen">
       <HeroSection />
@@ -51,13 +69,20 @@ export default function Home() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((cat, i) => (
-            <CategoryCard key={cat} categoryKey={cat} index={i} />
+            <CategoryCard
+              key={cat}
+              categoryKey={cat}
+              index={i}
+              image={getCategoryImage(cat)}
+            />
           ))}
         </div>
+
       </section>
 
       {/* Featured Products */}
       {!isLoading && featuredProducts.length > 0 && (
+
         <section className="bg-white py-24">
           <div className="max-w-7xl mx-auto px-6">
             <motion.div

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getProductById } from '@/data/products'
+import { supabase } from "../lib/supabase"
 import { motion } from 'framer-motion';
 import { Plus, Minus, ShoppingBag, ArrowLeft, Loader2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import { categoryConfig } from '@/components/store/CategoryCard';
 import Footer from '@/components/store/Footer';
 
 export default function ProductDetail() {
+
   const urlParams = new URLSearchParams(window.location.search);
   const productId = urlParams.get('id');
   const [quantity, setQuantity] = useState(1);
@@ -21,18 +22,31 @@ export default function ProductDetail() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (!productId) return;
+    const fetchProduct = async () => {
+      if (!productId) return;
 
-    setIsLoading(true);
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("id", productId)
+        .single();
 
-    getProductById(productId).then(data => {
-      setProduct(data);
+      if (error) {
+        console.error("Error trayendo producto:", error);
+        setProduct(null);
+      } else {
+        setProduct(data);
+      }
+
       setIsLoading(false);
-    });
+    };
+
+    fetchProduct();
   }, [productId]);
 
   const handleAddToCart = () => {
-    if (!product) return;
+    if (!product || product.stock === 0) return;
+
     addItem(product, quantity);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
@@ -58,6 +72,14 @@ export default function ProductDetail() {
   }
 
   const catLabel = categoryConfig[product.category]?.label || product.category;
+
+  const getStockStatus = (stock) => {
+    if (stock === 0) return { label: "No hay stock", color: "text-red-500" }
+    if (stock <= 5) return { label: "Hay poco stock", color: "text-orange-500" }
+    return { label: "Hay stock", color: "text-green-600" }
+  }
+
+  const status = getStockStatus(product.stock)
 
   return (
     <div className="min-h-screen pt-20">
@@ -100,6 +122,17 @@ export default function ProductDetail() {
               ${product.price?.toLocaleString('es-AR')}
             </p>
 
+            <div className="mb-6">
+              <span className={`text-sm font-medium ${status.color}`}>
+                {status.label}
+              </span>
+              {product.stock > 0 && (
+                <span className="text-sm text-[#3a3a3a]/50 ml-2">
+                  ({product.stock} disponibles)
+                </span>
+              )}
+            </div>
+
             <p className="text-[#3a3a3a]/70 leading-relaxed text-base mb-8 flex-1">
               {product.description || 'Pieza artesanal hecha a mano con dedicación y los mejores materiales.'}
             </p>
@@ -111,12 +144,14 @@ export default function ProductDetail() {
                 <button
                   onClick={() => setQuantity(q => Math.max(1, q - 1))}
                   className="w-12 h-12 flex items-center justify-center hover:bg-[#e6e0cf]/30 transition-colors"
+                  disabled={product.stock === 0}
                 >
                   <Minus className="w-4 h-4 text-[#3a3a3a]" />
                 </button>
                 <span className="w-14 text-center font-medium text-[#3a3a3a]">{quantity}</span>
                 <button
-                  onClick={() => setQuantity(q => q + 1)}
+                  onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
+                  disabled={product.stock === 0}
                   className="w-12 h-12 flex items-center justify-center hover:bg-[#e6e0cf]/30 transition-colors"
                 >
                   <Plus className="w-4 h-4 text-[#3a3a3a]" />
@@ -127,12 +162,17 @@ export default function ProductDetail() {
             {/* Add to cart button */}
             <Button
               onClick={handleAddToCart}
-              className={`h-14 rounded-xl text-base tracking-wide transition-all ${added
-                ? 'bg-green-500 hover:bg-green-500'
-                : 'bg-[#5297ac] hover:bg-[#5297ac]/90'
+              disabled={product.stock === 0}
+              className={`h-14 rounded-xl text-base tracking-wide transition-all ${product.stock === 0
+                ? 'bg-gray-300 cursor-not-allowed'
+                : added
+                  ? 'bg-green-500 hover:bg-green-500'
+                  : 'bg-[#5297ac] hover:bg-[#5297ac]/90'
                 } text-white`}
             >
-              {added ? (
+              {product.stock === 0 ? (
+                "Producto sin stock"
+              ) : added ? (
                 <>
                   <Check className="w-5 h-5 mr-2" />
                   ¡Agregado al carrito!

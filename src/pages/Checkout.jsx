@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { useCart } from '@/components/store/CartContext';
 import { categoryConfig } from '@/components/store/CategoryCard';
+import { supabase } from '@/lib/supabase';
 
 const WHATSAPP_NUMBER = '5493537333758'; // Reemplazar con el número real
 
@@ -28,28 +29,53 @@ export default function Checkout() {
 
   const isFormValid = form.nombre && form.email && form.provincia && form.localidad && form.codigo_postal && form.telefono;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!isFormValid || items.length === 0) return;
 
-    const itemsText = items.map(({ product, quantity }) => {
-      const catLabel = categoryConfig[product.category]?.label || product.category;
-      return `• ${product.name} (${catLabel}) x${quantity} — $${(product.price * quantity).toLocaleString('es-AR')}`;
-    }).join('\n');
+    try {
 
-    const message = `🧉 *Nuevo pedido — Ópalo Creaciones*\n\n` +
-      `*Datos del cliente:*\n` +
-      `Nombre: ${form.nombre}\n` +
-      `Email: ${form.email}\n` +
-      `Provincia: ${form.provincia}\n` +
-      `Localidad: ${form.localidad}\n` +
-      `Código Postal: ${form.codigo_postal}\n` +
-      `Teléfono: ${form.telefono}\n\n` +
-      `*Pedido:*\n${itemsText}\n\n` +
-      `*Total: $${totalPrice.toLocaleString('es-AR')}*`;
+      // 🔹 1️⃣ Armamos el array para la función SQL
+      const cartItems = items.map(({ product, quantity }) => ({
+        product_id: product.id,
+        quantity: quantity,
+        price: product.price
+      }));
+      // console.log(items);
+      // console.log(cartItems);
+      // 🔹 2️⃣ Llamamos a la función en Supabase
+      const { error } = await supabase.rpc("create_order_with_items", {
+        customer_nombre: form.nombre,
+        customer_email: form.email,
+        customer_provincia: form.provincia,
+        customer_localidad: form.localidad,
+        customer_codigo_postal: form.codigo_postal,
+        customer_telefono: form.telefono,
+        cart_items: cartItems
+      });
 
-    const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
-    clearCart();
+      if (error) throw error;
+
+      // 🔹 3️⃣ Después de que la base respondió OK, abrimos WhatsApp
+      const itemsText = items.map(({ product, quantity }) => {
+        const catLabel = categoryConfig[product.category]?.label || product.category;
+        return `• ${product.name} (${catLabel}) x${quantity} — $${(product.price * quantity).toLocaleString('es-AR')}`;
+      }).join('\n');
+
+      const message = `> Nuevo pedido — Ópalo Creaciones*\n\n <` +
+        `Nombre: ${form.nombre}\n` +
+        `Email: ${form.email}\n\n` +
+        `Pedido:\n${itemsText}\n\n` +
+        `Total: $${totalPrice.toLocaleString('es-AR')}`;
+
+      const encoded = encodeURIComponent(message);
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
+
+      clearCart();
+
+    } catch (error) {
+      console.error("Error al crear el pedido:", error);
+      alert("Hubo un problema al procesar el pedido.");
+    }
   };
 
   return (

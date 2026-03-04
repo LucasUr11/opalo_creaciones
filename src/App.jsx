@@ -4,6 +4,10 @@ import { queryClientInstance } from '@/lib/query-client'
 import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
+import Login from "./pages/Login";
+import Admin from "./pages/Admin";
+import EditProduct from "./pages/EditProduct";
+import NewProduct from "./pages/NewProduct";
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -38,6 +42,27 @@ function App() {
               }
             />
           ))}
+
+          <Route
+            path="/login"
+            element={<Login />}
+          />
+
+          <Route
+            path="/admin"
+            element={<Admin />}
+          />
+
+          <Route
+            path="/admin/edit/:id"
+            element={<EditProduct />}
+          />
+
+          <Route
+            path="/admin/new"
+            element={<NewProduct />}
+          />
+
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Router>

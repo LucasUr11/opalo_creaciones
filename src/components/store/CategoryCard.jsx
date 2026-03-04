@@ -5,38 +5,44 @@ import { createPageUrl } from '@/utils';
 
 const categoryConfig = {
   mates_torpedo: {
-    label: 'Mates Torpedo',
-    image: ["/images/mate_torpedo-1.jpeg"],
-    description: 'Clásicos y elegantes'
+    label: 'Mates Torpedos'
   },
   mates_imperiales: {
-    label: 'Mates Imperiales',
-    image: ["/images/mate_imperial-1.png"],
-    description: 'Para los más exigentes'
+    label: 'Mates Imperiales'
   },
   mates_madera: {
-    label: 'Mates de Madera',
-    image: ["/images/mate_madera-1.jpeg"],
-    description: 'Diseños personalizados a mano'
+    label: 'Mates de Madera'
+  },
+  mates_camionero: {
+    label: 'Mates Camionero'
+  },
+  mates_rancheros: {
+    label: 'Mates Rancheros'
+  },
+  mates_criollo: {
+    label: 'Mates Criollo'
+  },
+  cajas: {
+    label: 'Cajas'
+  },
+  prendas: {
+    label: 'Prendas'
+  },
+  cuadros: {
+    label: 'Cuadros'
   },
   cuencos_tablas: {
-    label: 'Cuencos y Tablas',
-    image: ["/images/cuenco_tabla-1.jpeg"],
-    description: 'Arte funcional en madera'
+    label: 'Cuencos y Tablas'
   },
   bombillas: {
-    label: 'Bombillas',
-    image: ["/images/bombilla-1.jpeg"],
-    description: 'El complemento perfecto'
+    label: 'Bombillas'
   },
   yerberas_azucareras: {
-    label: 'Yerberas y Azucareras',
-    image: ["/images/yerbera_azucarera-1.jpg"],
-    description: 'De tela artesanal'
+    label: 'Yerberas y Azucareras'
   }
 };
 
-export default function CategoryCard({ categoryKey, index }) {
+export default function CategoryCard({ categoryKey, index, image }) {
   const config = categoryConfig[categoryKey];
   if (!config) return null;
 
@@ -52,7 +58,7 @@ export default function CategoryCard({ categoryKey, index }) {
         className="group block relative overflow-hidden rounded-2xl aspect-[3/4] cursor-pointer"
       >
         <img
-          src={config.image}
+          src={image}
           alt={config.label}
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
