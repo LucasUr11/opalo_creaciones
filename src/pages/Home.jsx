@@ -116,10 +116,10 @@ export default function Home() {
           viewport={{ once: true }}
           className="max-w-2xl mx-auto px-6"
         >
-          <h2 className="text-4xl md:text-5xl text-white font-light mb-6" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+          <h2 className="text-4xl md:text-5xl text-zinc-800 font-light mb-6" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
             Cada pieza cuenta una historia
           </h2>
-          <p className="text-white/80 text-lg font-light leading-relaxed">
+          <p className="text-zinc/80 text-lg font-light leading-relaxed">
             Trabajamos con materiales nobles y técnicas artesanales para crear piezas que trascienden el tiempo.
           </p>
         </motion.div>
