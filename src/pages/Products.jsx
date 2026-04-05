@@ -6,20 +6,14 @@ import { Loader2 } from 'lucide-react';
 import { categoryConfig } from '@/components/store/CategoryCard';
 import { supabase } from "../lib/supabase"
 
-const categoryKeys = [
-  'mates_torpedo',
-  'mates_imperiales',
-  'mates_madera',
-  'mates_camionero',
-  'mates_criollo',
-  'mates_rancheros',
-  'cuencos_tablas',
-  'bombillas',
-  'yerberas_azucareras',
-  'cuadros',
-  'prendas',
-  'cajas',
-];
+const NEW_CATEGORIES = {
+  mates: { label: 'Mates', sub: ['mates_torpedo', 'mates_imperiales', 'mates_madera', 'mates_camionero', 'mates_criollo', 'mates_rancheros'] },
+  bombillas: { label: 'Bombillas', sub: ['bombillas'] },
+  yerberas: { label: 'Yerberas', sub: ['yerberas_azucareras'] },
+  otros: { label: 'Otros', sub: ['cuencos_tablas', 'cajas'] },
+  cuadros: { label: 'Cuadros y Marcos', sub: ['cuadros'] },
+  prendas: { label: 'Prendas', sub: ['prendas'] }
+};
 
 export default function Products() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -50,7 +44,10 @@ export default function Products() {
 
   const filteredProducts = useMemo(() => {
     if (activeCategory === 'all') return products;
-    return products.filter(p => p.category === activeCategory);
+
+    // Obtenemos las subcategorías permitidas para el filtro activo
+    const allowedSubs = NEW_CATEGORIES[activeCategory]?.sub || [];
+    return products.filter(p => allowedSubs.includes(p.category));
   }, [products, activeCategory]);
 
   return (
@@ -78,30 +75,22 @@ export default function Products() {
 
         {/* Filters */}
         <div className="flex flex-wrap gap-2 mb-12">
-
           <button
             onClick={() => setActiveCategory('all')}
-            className={`px-5 py-2.5 rounded-full text-sm tracking-wide transition-all ${activeCategory === 'all'
-              ? 'bg-[#5297ac] text-white shadow-md'
-              : 'bg-white text-[#3a3a3a] border border-[#e6e0cf] hover:border-[#5297ac] hover:text-[#5297ac]'
-              }`}
+            className={`px-5 py-2.5 rounded-full text-sm transition-all ${activeCategory === 'all' ? 'bg-[#5297ac] text-white' : 'bg-white border'}`}
           >
             Todos
           </button>
 
-          {categoryKeys.map(key => (
+          {Object.entries(NEW_CATEGORIES).map(([key, value]) => (
             <button
               key={key}
               onClick={() => setActiveCategory(key)}
-              className={`px-5 py-2.5 rounded-full text-sm tracking-wide transition-all ${activeCategory === key
-                ? 'bg-[#5297ac] text-white shadow-md'
-                : 'bg-white text-[#3a3a3a] border border-[#e6e0cf] hover:border-[#5297ac] hover:text-[#5297ac]'
-                }`}
+              className={`px-5 py-2.5 rounded-full text-sm transition-all ${activeCategory === key ? 'bg-[#5297ac] text-white' : 'bg-white border'}`}
             >
-              {categoryConfig[key]?.label || key}
+              {value.label}
             </button>
           ))}
-
         </div>
 
         {/* Products grid */}

@@ -93,7 +93,7 @@ export default function ProductDetail() {
           Volver a productos
         </Link>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Left - Image carousel */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -108,21 +108,21 @@ export default function ProductDetail() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex flex-col"
+            className="flex flex-col space-y-8" // Mantenemos flex-col pero sin estirar el contenido
           >
-            <p className="text-[#5297ac] text-sm tracking-[0.2em] uppercase mb-3">{catLabel}</p>
+            <p className="text-[#5297ac] text-sm tracking-[0.2em] uppercase mb-2">{catLabel}</p>
 
-            <h1 className="text-3xl md:text-4xl font-light text-[#3a3a3a] mb-4" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+            <h1 className="text-3xl md:text-4xl font-light text-[#3a3a3a] mb-3" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
               {product.name}
             </h1>
 
-            <div className="w-10 h-[1px] bg-[#5297ac]/30 mb-6" />
+            <div className="w-10 h-[1px] bg-[#5297ac]/30 mb-4" />
 
-            <p className="text-3xl font-semibold text-[#5297ac] mb-6">
+            <p className="text-3xl font-semibold text-[#5297ac] mb-4">
               ${product.price?.toLocaleString('es-AR')}
             </p>
 
-            <div className="mb-6">
+            <div className="mb-4">
               <span className={`text-sm font-medium ${status.color}`}>
                 {status.label}
               </span>
@@ -133,57 +133,49 @@ export default function ProductDetail() {
               )}
             </div>
 
-            <p className="text-[#3a3a3a]/70 leading-relaxed text-base mb-8 flex-1">
+            
+            <p className="text-[#3a3a3a]/70 leading-relaxed text-base mb-6">
               {product.description || 'Pieza artesanal hecha a mano con dedicación y los mejores materiales.'}
             </p>
 
-            {/* Quantity selector */}
-            <div className="mb-6">
-              <p className="text-sm text-[#3a3a3a]/60 mb-3 tracking-wider uppercase">Cantidad</p>
-              <div className="inline-flex items-center border border-[#e6e0cf] rounded-xl overflow-hidden">
-                <button
-                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                  className="w-12 h-12 flex items-center justify-center hover:bg-[#e6e0cf]/30 transition-colors"
-                  disabled={product.stock === 0}
-                >
-                  <Minus className="w-4 h-4 text-[#3a3a3a]" />
-                </button>
-                <span className="w-14 text-center font-medium text-[#3a3a3a]">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
-                  disabled={product.stock === 0}
-                  className="w-12 h-12 flex items-center justify-center hover:bg-[#e6e0cf]/30 transition-colors"
-                >
-                  <Plus className="w-4 h-4 text-[#3a3a3a]" />
-                </button>
+            {/* Agrupamos selector y botón para mayor control de espacio */}
+            <div className="space-y-4 mt-auto lg:mt-0">
+              {/* Quantity selector */}
+              <div>
+                <p className="text-sm text-[#3a3a3a]/60 mb-2 tracking-wider uppercase">Cantidad</p>
+                <div className="inline-flex items-center border border-[#e6e0cf] rounded-xl overflow-hidden">
+                  <button
+                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                    className="w-10 h-10 flex items-center justify-center hover:bg-[#e6e0cf]/30 transition-colors"
+                    disabled={product.stock === 0}
+                  >
+                    <Minus className="w-3 h-3 text-[#3a3a3a]" />
+                  </button>
+                  <span className="w-12 text-center font-medium text-[#3a3a3a]">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(q => Math.min(product.stock, q + 1))}
+                    disabled={product.stock === 0}
+                    className="w-10 h-10 flex items-center justify-center hover:bg-[#e6e0cf]/30 transition-colors"
+                  >
+                    <Plus className="w-3 h-3 text-[#3a3a3a]" />
+                  </button>
+                </div>
               </div>
-            </div>
 
-            {/* Add to cart button */}
-            <Button
-              onClick={handleAddToCart}
-              disabled={product.stock === 0}
-              className={`h-14 rounded-xl text-base tracking-wide transition-all ${product.stock === 0
-                ? 'bg-gray-300 cursor-not-allowed'
-                : added
-                  ? 'bg-green-500 hover:bg-green-500'
-                  : 'bg-[#5297ac] hover:bg-[#5297ac]/90'
-                } text-white`}
-            >
-              {product.stock === 0 ? (
-                "Producto sin stock"
-              ) : added ? (
-                <>
-                  <Check className="w-5 h-5 mr-2" />
-                  ¡Agregado al carrito!
-                </>
-              ) : (
-                <>
-                  <ShoppingBag className="w-5 h-5 mr-2" />
-                  Agregar al carrito
-                </>
-              )}
-            </Button>
+              {/* Add to cart button */}
+              <Button
+                onClick={handleAddToCart}
+                disabled={product.stock === 0}
+                className={`w-full h-12 rounded-xl text-base tracking-wide transition-all  ${product.stock === 0
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : added
+                      ? 'bg-green-500 hover:bg-green-500'
+                      : 'bg-[#5297ac] hover:bg-[#5297ac]/90'
+                  } text-white`}
+              >
+                {product.stock === 0 ? "Sin stock" : added ? "¡Agregado!" : "Agregar al carrito"}
+              </Button>
+            </div>
           </motion.div>
         </div>
       </div>

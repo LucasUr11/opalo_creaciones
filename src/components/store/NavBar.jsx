@@ -25,19 +25,18 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-        scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm' : 'bg-transparent'
-      }`}>
+      <nav className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${scrolled
+          ? 'bg-white/40 backdrop-blur-xl shadow-sm'
+          : 'bg-transparent text-black'
+        }`}>
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-            <span className={`text-2xl font-light tracking-wider transition-colors ${
-              scrolled ? 'text-[#3a3a3a]' : 'text-white'
-            }`} style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+            <span className={`text-2xl font-light tracking-wider transition-colors ${scrolled ? 'text-[#3a3a3a]' : 'text-white'
+              }`} style={{ fontFamily: 'Cormorant Garamond, serif' }}>
               Ópalo
             </span>
-            <span className={`text-xs tracking-[0.2em] uppercase font-light transition-colors ${
-              scrolled ? 'text-[#baa6a5]' : 'text-white/70'
-            }`}>
+            <span className={`text-xs tracking-[0.2em] uppercase font-light transition-colors ${scrolled ? 'text-[#baa6a5]' : 'text-white/70'
+              }`}>
               Creaciones
             </span>
           </Link>
@@ -48,9 +47,8 @@ export default function Navbar() {
               <Link
                 key={link.page}
                 to={createPageUrl(link.page)}
-                className={`text-sm tracking-wider hover:opacity-70 transition-all ${
-                  scrolled ? 'text-[#3a3a3a]' : 'text-white'
-                }`}
+                className={`text-sm tracking-wider hover:opacity-70 transition-all ${scrolled ? 'text-[#3a3a3a]' : 'text-white'
+                  }`}
               >
                 {link.label}
               </Link>
@@ -60,9 +58,8 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <button
               onClick={() => setCartOpen(true)}
-              className={`relative p-2 rounded-full transition-colors ${
-                scrolled ? 'hover:bg-[#e6e0cf]/50 text-[#3a3a3a]' : 'hover:bg-white/10 text-white'
-              }`}
+              className={`relative p-2 rounded-full transition-colors ${scrolled ? 'hover:bg-[#e6e0cf]/50 text-[#3a3a3a]' : 'hover:bg-white/10 text-white'
+                }`}
             >
               <ShoppingBag className="w-5 h-5" />
               {totalItems > 0 && (
@@ -79,9 +76,8 @@ export default function Navbar() {
             {/* Mobile menu button */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className={`md:hidden p-2 rounded-full transition-colors ${
-                scrolled ? 'hover:bg-[#e6e0cf]/50 text-[#3a3a3a]' : 'hover:bg-white/10 text-white'
-              }`}
+              className={`md:hidden p-2 rounded-full transition-colors ${scrolled ? 'hover:bg-[#e6e0cf]/50 text-[#3a3a3a]' : 'hover:bg-white/10 text-white'
+                }`}
             >
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>

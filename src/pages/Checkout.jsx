@@ -10,7 +10,7 @@ import { useCart } from '@/components/store/CartContext';
 import { categoryConfig } from '@/components/store/CategoryCard';
 import { supabase } from '@/lib/supabase';
 
-const WHATSAPP_NUMBER = '5493537333758'; // Reemplazar con el número real
+const WHATSAPP_NUMBER = '5493537333758';
 
 export default function Checkout() {
   const { items, updateQuantity, removeItem, totalPrice, clearCart } = useCart();
@@ -40,8 +40,6 @@ export default function Checkout() {
         quantity: quantity,
         price: product.price
       }));
-      // console.log(items);
-      // console.log(cartItems);
       // 🔹 2️⃣ Llamamos a la función en Supabase
       const { error } = await supabase.rpc("create_order_with_items", {
         customer_nombre: form.nombre,

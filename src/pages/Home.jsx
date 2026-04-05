@@ -7,13 +7,11 @@ import ProductCard from '@/components/store/ProductCard';
 import Footer from '@/components/store/Footer';
 
 
-const categories = [
-  'mates_torpedo',
-  'mates_imperiales',
-  'mates_madera',
-  'cuencos_tablas',
-  'bombillas',
-  'yerberas_azucareras'
+const DISPLAY_CATEGORIES = [
+  { id: 'mates', label: 'Mates', sub: ['mates_torpedo', 'mates_imperiales', 'mates_madera', 'mates_camionero'] },
+  { id: 'bombillas', label: 'Bombillas', sub: ['bombillas'] },
+  { id: 'yerberas', label: 'Yerberas', sub: ['yerberas_azucareras'] },
+  { id: 'otros', label: 'Otros', sub: ['cuencos_tablas', 'cajas'] }
 ];
 
 export default function Home() {
@@ -41,43 +39,43 @@ export default function Home() {
 
   const featuredProducts = products.filter(p => p.featured);
 
-  const getCategoryImage = (categoryKey) => {
-    const product = products.find(
-      p => p.category === categoryKey && p.images?.length > 0
-    )
-    return product?.images?.[0] || "/placeholder.jpg"
-  }
+  const getGroupImage = (subCategories) => {
+    // Buscamos el primer producto que pertenezca a cualquiera de las subcategorías del grupo
+    const product = products.find(p => subCategories.includes(p.category) && p.images?.length > 0);
+    return product?.images?.[0] || "/placeholder.jpg";
+  };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#fafafa]"> {/* Un blanco roto/gris muy suave ayuda a la transición */}
       <HeroSection />
 
       {/* Categories Section */}
-      <section id="categorias" className="max-w-7xl mx-auto px-6 py-24">
+      <section id="categorias" className="max-w-7xl mx-auto px-6 py-28">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <p className="text-[#5297ac] text-sm tracking-[0.3em] uppercase mb-3">Descubrí</p>
-          <h2 className="text-4xl md:text-5xl font-light text-[#3a3a3a]" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+  
+          <p className="text-[#5297ac] text-sm tracking-[0.3em] uppercase mb-4">Colecciones</p>
+          <h2 className="text-4xl md:text-6xl font-light text-[#2a2a2a]" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
             Nuestras Categorías
           </h2>
-          <div className="w-12 h-[1px] bg-[#5297ac] mx-auto mt-6" />
+          <div className="w-12 h-[1px] bg-[#5297ac]/40 mx-auto mt-8" />
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((cat, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {DISPLAY_CATEGORIES.map((cat, i) => (
             <CategoryCard
-              key={cat}
-              categoryKey={cat}
+              key={cat.id}
+              categoryKey={cat.id} // Asegurate que CategoryCard use este ID para el link (ej: /productos?category=mates)
+              label={cat.label}     // Pasamos el nuevo nombre legible
               index={i}
-              image={getCategoryImage(cat)}
+              image={getGroupImage(cat.sub)}
             />
           ))}
         </div>
-
       </section>
 
       {/* Featured Products */}
