@@ -69,8 +69,8 @@ export default function Home() {
           {DISPLAY_CATEGORIES.map((cat, i) => (
             <CategoryCard
               key={cat.id}
-              categoryKey={cat.id} // Asegurate que CategoryCard use este ID para el link (ej: /productos?category=mates)
-              label={cat.label}     // Pasamos el nuevo nombre legible
+              categoryKey={cat.id}
+              label={cat.label}
               index={i}
               image={getGroupImage(cat.sub)}
             />

@@ -108,7 +108,7 @@ export default function ProductDetail() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex flex-col space-y-8" // Mantenemos flex-col pero sin estirar el contenido
+            className="flex flex-col space-y-8"
           >
             <p className="text-[#5297ac] text-sm tracking-[0.2em] uppercase mb-2">{catLabel}</p>
 
